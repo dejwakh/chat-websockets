@@ -8,10 +8,10 @@ A basic unsecure, public chatroom to test [socket.io](https://socket.io/get-star
 3. A way to make sure the same user isn’t logged in twice (and not allow the second attempt)
 
 ## Built using:
-1. Express.js
+1. Express + Node
 2. socket.io
 
-## To test:
+## To test locally:
 1. Download the repo
 2. Run `node app.js`
-3. Go to `localhost:3000` on several browser tabs, logging as different usernames on each one
+3. Go to `localhost:3000` on several browser tabs, "logging in" as different usernames on each one
