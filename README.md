@@ -14,4 +14,4 @@ A basic unsecure, public chatroom to test [socket.io](https://socket.io/get-star
 ## To test:
 1. Download the repo
 2. Run `node app.js`
-3. Go to `localhost:3000` on several browsers, logging as different usernames on each one
+3. Go to `localhost:3000` on several browser tabs, logging as different usernames on each one
