@@ -48,7 +48,7 @@
         if (!validated && response.user === username) {
           if (response.validated) {
             validated = true;
-            document.title = "Logged in as " + username;
+            document.title = response.room + "> Logged in as " + username;
           } else {
             document.title = "Connection error."
             appendMessage("Connection error. Refresh to try again.", "red")
@@ -58,10 +58,10 @@
         }
       })
 
-      socket.on('user joined', (user, timestamp, connectedUsers) => {
+      socket.on('user joined', (user, timestamp, room, connectedUsers) => {
         let message = timestamp 
         message += (username === user ? "You" : user)
-        message += " just joined. Current users: " + connectedUsers.join(", ");
+        message += " just joined " + room + ". Current users: " + connectedUsers.join(", ");
         appendMessage(message, "green")
       })
 
