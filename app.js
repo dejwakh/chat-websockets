@@ -19,26 +19,13 @@ function timestamp() {
   if (hours < 10) hours = "0" + hours
   if (minutes < 10) minutes = "0" + minutes
   if (seconds < 10) seconds = "0" + seconds
-  return hours + ":" + minutes + ":" + seconds + " > ";
+  return '' + hours + ":" + minutes + ":" + seconds + " > ";
 }
 
 io.on('connection', (socket) => {
   // a new websocket connection
-
-  socket.on('disconnect', () => {
-    if (socket.data.username) {
-      const idx = connectedUsers.indexOf(socket.data.username);
-      connectedUsers.splice(idx, 1)
-      io.emit('user left', socket.data.username, timestamp(), connectedUsers)
-    }
-  });
-
-  socket.on('chat message', (note) => {
-    io.emit('chat message', timestamp(), note);
-  });
-
   socket.on('register user', (newUser) => {
-    if (connectedUsers.includes(newUser)) {
+    if (!newUser || newUser.length < 3 || connectedUsers.includes(newUser)) {
       io.emit('validate user', {
         user: newUser,
         validated: false
@@ -53,7 +40,18 @@ io.on('connection', (socket) => {
       connectedUsers.push(newUser)
       io.emit('user joined', newUser, timestamp(), connectedUsers)
     }
-    
+  });
+
+  socket.on('chat message', (note) => {
+    io.emit('chat message', timestamp(), note);
+  });
+
+  socket.on('disconnect', () => {
+    if (socket.data.username) {
+      const idx = connectedUsers.indexOf(socket.data.username);
+      if (idx >= 0) connectedUsers.splice(idx, 1)
+      io.emit('user left', socket.data.username, timestamp(), connectedUsers)
+    }
   });
 
 });
