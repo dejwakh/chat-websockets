@@ -6,13 +6,15 @@ const { Server } = require("socket.io");
 const io = new Server(server);
 
 const connectedUsers = {lobby: []};
-let room = "lobby"
+let room
 
 app.get('/', (req, res) => {
+  room = "lobby"
   res.sendFile(__dirname + '/index.html');
 });
 
 app.get('/rooms', (req, res) => {
+  room = "lobby"
   res.sendFile(__dirname + '/index.html');
 });
 
@@ -37,6 +39,7 @@ io.on('connection', (socket) => {
   // a new websocket connection
   socket.join(room)
   socket.data.room = room
+  
   socket.on('register user', (newUser) => {
     if (!newUser || newUser.length < 3 || connectedUsers[socket.data.room].includes(newUser)) {
       io.to(socket.data.room).emit('validate user', {
