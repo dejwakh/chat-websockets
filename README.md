@@ -20,5 +20,5 @@ A basic unsecure, public chatroom to test [socket.io](https://socket.io/get-star
 5. To test the rooms feature, go to `localhost:3000/rooms/room_name` and replace `room_name` with whatever room you want to create
 
 ## Only two noteworthy files:
-1. The Express server is contained `app.js`
+1. The Express server is contained in `app.js`
 2. The client is contained in `index.html` (including JS)
