@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Socket.IO chat</title>
+    <title>Chat Client</title>
     <style>
       body { margin: 0; padding-bottom: 3rem; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
 
@@ -16,9 +16,9 @@
       #messages { list-style-type: none; margin: 0; padding: 0; }
       #messages > li { padding: 0.5rem 1rem; }
       #messages > li:nth-child(odd) { background: #efefef; }
-      #messages > li.own { background: #c8eef8; }
-      #messages > li.left { background: #fac4b3; }
-      #messages > li.joined { background: #e1fad1; }
+      #messages > li.blue { background: #c8eef8; }
+      #messages > li.red { background: #fac4b3; }
+      #messages > li.green { background: #e1fad1; }
       
     </style>
   </head>
@@ -51,7 +51,7 @@
             document.title = "Logged in as " + username;
           } else {
             document.title = "Connection error."
-            appendMessage("This user is already logged in. Refresh to try again.")
+            appendMessage("Connection error. Refresh to try again.", "red")
             input.disabled = true;
             sendButton.disabled = true;
           }
@@ -62,18 +62,18 @@
         let message = timestamp 
         message += (username === user ? "You" : user)
         message += " just joined. Current users: " + connectedUsers.join(", ");
-        appendMessage(message, "joined")
+        appendMessage(message, "green")
       })
 
       socket.on('user left', (user, timestamp, connectedUsers) => {
         let message = timestamp + user + " left. Current users: " + connectedUsers.join(", ")
-        appendMessage(message, "left");
+        appendMessage(message, "red");
       })
           
       form.addEventListener('submit', e => {
         e.preventDefault();
         if (input.value) {
-          socket.emit('chat message', 
+          socket.emit('chat message',
             {
               sender: username, 
               message: input.value
@@ -87,7 +87,7 @@
         let message = timestamp
         if (username === note.sender) {
           message += "Me: " + note.message
-          appendMessage(message, "own")
+          appendMessage(message, "blue")
         } else {
           message += note.sender + ": " + note.message
           appendMessage(message)
