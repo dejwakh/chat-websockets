@@ -16,6 +16,10 @@
       #messages { list-style-type: none; margin: 0; padding: 0; }
       #messages > li { padding: 0.5rem 1rem; }
       #messages > li:nth-child(odd) { background: #efefef; }
+      #messages > li.own { background: #c8eef8; }
+      #messages > li.left { background: #fac4b3; }
+      #messages > li.joined { background: #e1fad1; }
+      
     </style>
   </head>
   <body>
@@ -23,27 +27,26 @@
     <ul id="messages"></ul>
 
     <form id="form" action="">
-      <input id="input" autocomplete="off" /><button id="sendButton">Send</button>
+      <input id="input" autocomplete="off" autofocus/><button id="sendButton">Send</button>
     </form>
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
       var socket = io();
 
-      let validated = false;
-
       const messages = document.getElementById('messages');
       const form = document.getElementById('form');
       const sendButton = document.getElementById('sendButton');
       const input = document.getElementById('input');
-
+      
+      let validated = false;
       const username = window.prompt("Enter username");
       
       socket.emit('register user', username);
 
       socket.on('validate user', response => {
         if (!validated && response.user === username) {
-          if (response.status) {
+          if (response.validated) {
             validated = true;
             document.title = "Logged in as " + username;
           } else {
@@ -56,12 +59,15 @@
       })
 
       socket.on('user joined', (user, timestamp, connectedUsers) => {
-        let message = timestamp + " => " + (username === user ? "You" : user) + " just joined. Current users: " + connectedUsers.join(", ");
-        appendMessage(message)
+        let message = timestamp 
+        message += (username === user ? "You" : user)
+        message += " just joined. Current users: " + connectedUsers.join(", ");
+        appendMessage(message, "joined")
       })
 
       socket.on('user left', (user, timestamp, connectedUsers) => {
-        appendMessage(timestamp + " => " + user + " left. Current users: " + connectedUsers.join(", "));
+        let message = timestamp + user + " left. Current users: " + connectedUsers.join(", ")
+        appendMessage(message, "left");
       })
           
       form.addEventListener('submit', e => {
@@ -69,7 +75,7 @@
         if (input.value) {
           socket.emit('chat message', 
             {
-              from: username, 
+              sender: username, 
               message: input.value
             }
           );
@@ -77,16 +83,21 @@
         }
       });
     
-      socket.on('chat message', (timestamp, msg) => {
-        let message = timestamp + " => "
-        message += username === msg.from ? "Me: " : msg.from + ": "
-        message += msg.message
-        appendMessage(message)
+      socket.on('chat message', (timestamp, note) => {
+        let message = timestamp
+        if (username === note.sender) {
+          message += "Me: " + note.message
+          appendMessage(message, "own")
+        } else {
+          message += note.sender + ": " + note.message
+          appendMessage(message)
+        }
       });
 
-      function appendMessage(message) {
+      function appendMessage(message, ...classes) {
         const item = document.createElement('li');
         item.textContent = message
+        if (classes.length) item.className = classes.join(" ")
         messages.appendChild(item);
         window.scrollTo(0, document.body.scrollHeight);
       }
