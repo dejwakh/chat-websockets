@@ -14,11 +14,11 @@ A basic unsecure, public chatroom to test [socket.io](https://socket.io/get-star
 
 ## To test locally:
 1. Download the repo & run `npm i`
-2. Run `node app.js`
+2. Run `node server.js`
 3. Go to `localhost:3000` on several different browser tabs, "logging in" as different usernames on each one
 4. Send a message from any tab and see it appear on the others
 5. To test the rooms feature, go to `localhost:3000/rooms/room_name` and replace `room_name` with whatever room you want to create
 
 ## Only two noteworthy files:
-1. The Express server is contained in `app.js`
-2. The client is contained in `index.html` (including JS)
+1. The Express server is contained in `server.js`
+2. The client is contained in `client.html` (including JS)

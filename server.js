@@ -10,18 +10,18 @@ let room
 
 app.get('/', (req, res) => {
   room = "lobby"
-  res.sendFile(__dirname + '/index.html');
+  res.sendFile(__dirname + '/client.html');
 });
 
 app.get('/rooms', (req, res) => {
   room = "lobby"
-  res.sendFile(__dirname + '/index.html');
+  res.sendFile(__dirname + '/client.html');
 });
 
 app.get('/rooms/:room', (req, res) => {
   room = req.params.room
   if (!connectedUsers.hasOwnProperty(room)) connectedUsers[room] = []
-  res.sendFile(__dirname + '/index.html');
+  res.sendFile(__dirname + '/client.html');
 });
 
 function timestamp() {
